@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div>
-      <SortSelect :disabled="cards.length <= 1" @sortOrderChanged="handleSortOrderChange" />
-    </div>
+    <SortSelect :disabled="cards.length <= 1" @sortOrderChanged="handleSortOrderChange" />
     <section
       :style="`background: ${options.color}`"
       @drop="onDrop($event, options.id)"
@@ -43,7 +41,7 @@
 </template>
 
 <script setup>
-import {ref, inject, computed} from 'vue';
+import {ref, inject} from 'vue';
 import CardItem from './CardItem.vue';
 import CardForm from './CardForm.vue';
 import SortSelect from './SortSelect.vue';
