@@ -48,18 +48,18 @@
           @click="isDeleteCardDialogOpen = true" />
       </template>
     </v-tooltip>
-    <v-tooltip text="Сортировка по рейтингу">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          v-bind="props"
-          icon="mdi-sort"
-          density="compact"
-          variant="tonal"
-          class="sort-btn"
-          color="blue"
-          @click="sortList" />
-      </template>
-    </v-tooltip>
+    <!--    <v-tooltip text="Сортировка по рейтингу">-->
+    <!--      <template v-slot:activator="{ props }">-->
+    <!--        <v-btn-->
+    <!--          v-bind="props"-->
+    <!--          icon="mdi-sort"-->
+    <!--          density="compact"-->
+    <!--          variant="tonal"-->
+    <!--          class="sort-btn"-->
+    <!--          color="blue"-->
+    <!--          @click="sortList" />-->
+    <!--      </template>-->
+    <!--    </v-tooltip>-->
 
     <img :src="props.card.image" alt="изображение товара" />
     <div class="info">
@@ -92,7 +92,8 @@
                 isDeleteCardDialogOpen = false;
               }
             "
-            >Да</v-btn
+          >Да
+          </v-btn
           >
           <v-btn variant="outlined" @click="isDeleteCardDialogOpen = false">Нет</v-btn>
         </v-card-actions>
@@ -102,125 +103,133 @@
 </template>
 
 <script setup>
-  import { ref, inject, computed } from 'vue';
-  import CardForm from './CardForm.vue';
+import {ref, inject, computed} from 'vue';
+import CardForm from './CardForm.vue';
 
-  const firstList = inject('firstList');
-  const secondList = inject('secondList');
-  const lastList = inject('lastList');
+const firstList = inject('firstList');
+const secondList = inject('secondList');
+const lastList = inject('lastList');
 
-  const props = defineProps({
-    card: {},
-    options: {},
-  });
+const props = defineProps({
+  card: {},
+  options: {},
+});
 
-  const borderColor = computed(() => {
-    return props.options.id === 1 ? 'blue' : props.options.id === 2 ? 'yellow' : 'pink';
-  });
+const borderColor = computed(() => {
+  return props.options.id === 1 ? 'blue' : props.options.id === 2 ? 'yellow' : 'pink';
+});
 
-  let cards = ref([]);
+let cards = ref([]);
 
-  function getLocalCards() {
-    switch (props.options.id) {
-      case 1:
-        cards = firstList;
-        break;
-      case 2:
-        cards = secondList;
-        break;
-      case 3:
-        cards = lastList;
-        break;
-    }
+function getLocalCards() {
+  switch (props.options.id) {
+    case 1:
+      cards = firstList;
+      break;
+    case 2:
+      cards = secondList;
+      break;
+    case 3:
+      cards = lastList;
+      break;
   }
+}
 
-  const isDeleteCardDialogOpen = ref(false);
-  const isEditCardDialogOpen = ref(false);
+const isDeleteCardDialogOpen = ref(false);
+const isEditCardDialogOpen = ref(false);
 
-  function saveCard() {
-    isEditCardDialogOpen.value = false;
-    //По готовности бекенда добавить сохранение на сервер
-  }
-  function toNextList() {
-    getLocalCards();
-    if (cards.value === firstList.value) {
-      secondList.value.unshift(props.card);
-      firstList.value = firstList.value.filter((card) => card.id !== props.card.id);
-    } else if (cards.value === secondList.value) {
-      lastList.value.unshift(props.card);
-      secondList.value = secondList.value.filter((card) => card.id !== props.card.id);
-    }
-  }
+function saveCard() {
+  isEditCardDialogOpen.value = false;
+  //По готовности бекенда добавить сохранение на сервер
+}
 
-  function toPreviousList() {
-    getLocalCards();
-    if (cards.value === lastList.value) {
-      secondList.value.unshift(props.card);
-      lastList.value = lastList.value.filter((card) => card.id !== props.card.id);
-    } else if (cards.value === secondList.value) {
-      firstList.value.unshift(props.card);
-      secondList.value = secondList.value.filter((card) => card.id !== props.card.id);
-    }
+function toNextList() {
+  getLocalCards();
+  if (cards.value === firstList.value) {
+    secondList.value.unshift(props.card);
+    firstList.value = firstList.value.filter((card) => card.id !== props.card.id);
+  } else if (cards.value === secondList.value) {
+    lastList.value.unshift(props.card);
+    secondList.value = secondList.value.filter((card) => card.id !== props.card.id);
   }
+}
 
-  function sortList() {
-    getLocalCards();
-    cards = cards.value.sort((a, b) => b.rating.rate - a.rating.rate);
+function toPreviousList() {
+  getLocalCards();
+  if (cards.value === lastList.value) {
+    secondList.value.unshift(props.card);
+    lastList.value = lastList.value.filter((card) => card.id !== props.card.id);
+  } else if (cards.value === secondList.value) {
+    firstList.value.unshift(props.card);
+    secondList.value = secondList.value.filter((card) => card.id !== props.card.id);
   }
+}
+
+// function sortList() {
+//   getLocalCards();
+//   cards = cards.value.sort((a, b) => b.rating.rate - a.rating.rate);
+// }
 </script>
 
 <style lang="scss" scoped>
-  .card {
-    margin-top: 20px;
-    padding: 10%;
+.card {
+  margin-top: 20px;
+  padding: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 50px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+
+  .edit-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  .to-right-btn {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+  }
+
+  .to-left-btn {
+    position: absolute;
+    right: 20px;
+    top: 100px;
+  }
+
+  .sort-btn {
+    position: absolute;
+    right: 20px;
+    top: 140px;
+  }
+
+  .delete-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  img {
+    width: 50%;
+    border-radius: 10px;
+  }
+
+  .info {
+    margin-top: 10px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 50px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-    .edit-btn {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-    }
+    align-items: start;
 
-    .to-right-btn {
-      position: absolute;
-      right: 20px;
-      top: 60px;
-    }
-    .to-left-btn {
-      position: absolute;
-      right: 20px;
-      top: 100px;
-    }
-    .sort-btn {
-      position: absolute;
-      right: 20px;
-      top: 140px;
-    }
-    .delete-btn {
-      position: absolute;
-      right: 20px;
-      bottom: 20px;
-    }
-    img {
-      width: 50%;
-      border-radius: 10px;
-    }
-    .info {
+    p {
       margin-top: 10px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: start;
-      p {
-        margin-top: 10px;
-      }
     }
   }
+}
 </style>
